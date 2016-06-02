@@ -1,0 +1,127 @@
+"use strict";
+
+var _jsxFileName = "_js/html-jsx.js";
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+/**
+ * This is a web interface for the HTML to JSX converter contained in
+ * `html-jsx-lib.js`.
+ */
+;(function () {
+
+  var HELLO_COMPONENT = "\
+<!-- Hello world -->\n\
+<div class=\"awesome\" style=\"border: 1px solid red\">\n\
+  <label for=\"name\">Enter your name: </label>\n\
+  <input type=\"text\" id=\"name\" />\n\
+</div>\n\
+<p>Enter your HTML here</p>\
+";
+
+  var HTMLtoJSXComponent = React.createClass({
+    displayName: "HTMLtoJSXComponent",
+
+    getInitialState: function () {
+      return {
+        outputClassName: 'NewComponent',
+        createClass: true
+      };
+    },
+    onReactClassNameChange: function (evt) {
+      this.setState({ outputClassName: evt.target.value });
+    },
+    onCreateClassChange: function (evt) {
+      this.setState({ createClass: evt.target.checked });
+    },
+    setInput: function (input) {
+      this.setState({ input: input });
+      this.convertToJsx();
+    },
+    convertToJSX: function (input) {
+      var converter = new HTMLtoJSX({
+        outputClassName: this.state.outputClassName,
+        createClass: this.state.createClass
+      });
+      return converter.convert(input);
+    },
+    render: function () {
+      return React.createElement(
+        "div",
+        {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 51
+          }
+        },
+        React.createElement(
+          "div",
+          { id: "options", __source: {
+              fileName: _jsxFileName,
+              lineNumber: 52
+            }
+          },
+          React.createElement(
+            "label",
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 53
+              }
+            },
+            React.createElement("input", {
+              type: "checkbox",
+              checked: this.state.createClass,
+              onChange: this.onCreateClassChange, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 54
+              }
+            }),
+            "Create class"
+          ),
+          React.createElement(
+            "label",
+            { style: { display: this.state.createClass ? '' : 'none' }, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 60
+              }
+            },
+            "· Class name:",
+            React.createElement("input", {
+              type: "text",
+              value: this.state.outputClassName,
+              onChange: this.onReactClassNameChange, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 63
+              }
+            })
+          )
+        ),
+        React.createElement(ReactPlayground, {
+          codeText: HELLO_COMPONENT,
+          renderCode: true,
+          transformer: this.convertToJSX,
+          showCompiledJSTab: false,
+          editorTabTitle: "Live HTML Editor",
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 69
+          }
+        })
+      );
+    }
+  });
+
+  ReactDOM.render(React.createElement(HTMLtoJSXComponent, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 81
+    }
+  }), document.getElementById('jsxCompiler'));
+})();
