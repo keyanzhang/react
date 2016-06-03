@@ -53,7 +53,7 @@ function segmentify(str) {
   return segments;
 }
 
-// ?invariant=123&args="foo"&args="bar"&stack="longlonginfo"
+// ?invariant=123&args[]=foo&args[]=bar
 function parseQueryString() {
   var rawQueryString = window.location.search.substring(1);
   if (!rawQueryString) {
@@ -62,34 +62,23 @@ function parseQueryString() {
 
   var code = '';
   var args = [];
-  var stack = '';
 
-  var queries = decodeURIComponent(rawQueryString).split('&');
+  var queries = rawQueryString.split('&');
   for (var i = 0; i < queries.length; i++) {
-    var query = queries[i];
+    var query = decodeURIComponent(queries[i]);
     if (query.indexOf('invariant=') === 0) {
       code = query.slice(10);
-    } else if (query.indexOf('args=') === 0) {
-      args.push(query.slice(5));
-    } else if (query.indexOf('stack=') === 0) {
-      stack = query.slice(6);
+    } else if (query.indexOf('args[]=') === 0) {
+      args.push(query.slice(7));
     }
   }
 
-  var stripQuotesRegex = /^\ *\"([\s\S]*)\"\ *$/;
-  // remove double quotes
-  args = args.map(function (str) {
-    return str.replace(stripQuotesRegex, '$1');
-  });
-  stack = stack.replace(stripQuotesRegex, '$1');
-
-  return [code, args, stack];
+  return [code, args];
 }
 
 function ErrorResult(props) {
   var code = props.code;
   var errorMsg = props.msg;
-  var stack = props.stack;
 
   if (!code) {
     return React.createElement(
@@ -97,19 +86,19 @@ function ErrorResult(props) {
       {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 78
+          lineNumber: 69
         }
       },
       'No valid query params provided in the URL. Here\'s an example: ',
       ' ',
       React.createElement(
         'a',
-        { href: '/react/docs/error-codes.html?invariant=50&args=%22Foobar%22', __source: {
+        { href: '/react/docs/error-codes.html?invariant=50&args[]=Foobar', __source: {
             fileName: _jsxFileName,
-            lineNumber: 80
+            lineNumber: 71
           }
         },
-        'http://facebook.github.io/react/docs/error-codes.html?invariant=50&args="Foobar"'
+        'http://facebook.github.io/react/docs/error-codes.html?invariant=50&args[]=Foobar'
       )
     );
   }
@@ -119,7 +108,7 @@ function ErrorResult(props) {
     {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 88
+        lineNumber: 79
       }
     },
     React.createElement(
@@ -127,7 +116,7 @@ function ErrorResult(props) {
       {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 89
+          lineNumber: 80
         }
       },
       'Error #',
@@ -138,39 +127,10 @@ function ErrorResult(props) {
       {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 90
+          lineNumber: 81
         }
       },
       segmentify(errorMsg)
-    ),
-    stack ? React.createElement(
-      'h4',
-      {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 91
-        }
-      },
-      'Stack Info'
-    ) : React.createElement(
-      'h4',
-      {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 91
-        }
-      },
-      'Stack info not found.'
-    ),
-    React.createElement(
-      'pre',
-      {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 92
-        }
-      },
-      stack
     )
   );
 }
@@ -189,8 +149,7 @@ var ErrorCodes = function (_React$Component) {
 
     _this.state = {
       code: null,
-      errorMsg: '',
-      stack: ''
+      errorMsg: ''
     };
     return _this;
   }
@@ -200,13 +159,11 @@ var ErrorCodes = function (_React$Component) {
     if (parseResult != null) {
       var code = parseResult[0];
       var args = parseResult[1];
-      var stack = parseResult[2];
 
       if (errorMap[code]) {
         this.setState({
           code: code,
-          errorMsg: replaceArgs(errorMap[code], args),
-          stack: stack
+          errorMsg: replaceArgs(errorMap[code], args)
         });
       }
     }
@@ -216,10 +173,9 @@ var ErrorCodes = function (_React$Component) {
     return React.createElement(ErrorResult, {
       code: this.state.code,
       msg: this.state.errorMsg,
-      stack: this.state.stack,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 124
+        lineNumber: 111
       }
     });
   };
@@ -230,6 +186,6 @@ var ErrorCodes = function (_React$Component) {
 ReactDOM.render(React.createElement(ErrorCodes, {
   __source: {
     fileName: _jsxFileName,
-    lineNumber: 134
+    lineNumber: 120
   }
 }), document.querySelector('.error-codes-container'));
