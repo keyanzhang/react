@@ -47,9 +47,9 @@ script:
         popd
       fi
     elif [ "$TEST_TYPE" = build ]; then
+      set -e
+      ./node_modules/.bin/grunt build
       if [ "$SERVER" ]; then
-        set -e
-        ./node_modules/.bin/grunt build
         curl \
           -F "react=@build/react.js" \
           -F "react.min=@build/react.min.js" \
