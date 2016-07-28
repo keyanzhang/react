@@ -27,6 +27,9 @@ var warning = require('warning');
 
 ReactDefaultInjection.inject();
 
+var noop = () => {};
+noop();
+
 var ReactDOM = {
   findDOMNode: findDOMNode,
   render: ReactMount.render,
