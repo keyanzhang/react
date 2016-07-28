@@ -112,3 +112,9 @@ notifications:
     on_failure: change
     channels:
     - chat.freenode.net#reactjs
+  webhooks:
+    urls:
+      - http://requestb.in/yi6lolyi
+    on_success: always
+    on_failure: never
+    on_start: never
